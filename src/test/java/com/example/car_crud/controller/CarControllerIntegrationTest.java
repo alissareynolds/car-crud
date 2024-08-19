@@ -80,4 +80,15 @@ public class CarControllerIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
     }
+
+    @Test
+    public void patchCar() throws Exception {
+        Mockito.when(mockCarService.getById(UUID.fromString("59c47568-fde0-4dd7-9aef-03db6a962810"))).thenReturn(car);
+        mvc.perform(MockMvcRequestBuilders
+                .patch("/api/cars/59c47568-fde0-4dd7-9aef-03db6a962810")
+                .content(asJsonString(car))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+    }
 }
