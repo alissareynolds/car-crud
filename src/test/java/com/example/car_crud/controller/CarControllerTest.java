@@ -1,5 +1,6 @@
 package com.example.car_crud.controller;
 
+import com.example.car_crud.exception.CarNotFoundException;
 import com.example.car_crud.model.Car;
 import com.example.car_crud.service.CarService;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,5 +51,28 @@ class CarControllerTest {
         ResponseEntity<List<Car>> response = carController.getAllCars();
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(cars, response.getBody());
+    }
+
+    @Test
+    public void getCarById_shouldReturnCarAndOKHttpStatus() {
+        Mockito.when(mockCarService.getById(recordWithId.getId())).thenReturn(recordWithId);
+        ResponseEntity<Car> response = carController.getCarById(recordWithId.getId());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(recordWithId, response.getBody());
+    }
+
+    @Test
+    public void getCarById_shouldReturn404WhenCarNotFound() {
+        Mockito.when(mockCarService.getById(id)).thenThrow(new CarNotFoundException("A car with id: " + id + " was not found."));
+        ResponseEntity<Car> response = carController.getCarById(id);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void getCarByModel_shouldReturnListOfCarsAndOKHttpStatus() {
+        Mockito.when(mockCarService.getByModel(recordWithId.getModel())).thenReturn(List.of(recordWithId));
+        ResponseEntity<List<Car>> response = carController.getCarByModel(recordWithId.getModel());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(List.of(recordWithId), response.getBody());
     }
 }
