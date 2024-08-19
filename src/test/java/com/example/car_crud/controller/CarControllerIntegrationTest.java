@@ -4,6 +4,7 @@ import com.example.car_crud.model.Car;
 import com.example.car_crud.service.CarService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,5 +45,28 @@ public class CarControllerIntegrationTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Test
+    public void getAllCars() throws Exception {
+        mvc.perform(MockMvcRequestBuilders
+                .get("/api/cars").accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+    }
+
+    @Test
+    public void getCarById() throws Exception {
+        Mockito.when(mockCarService.getById(UUID.fromString("59c47568-fde0-4dd7-9aef-03db6a962810"))).thenReturn(new Car());
+        mvc.perform(MockMvcRequestBuilders
+                .get("/api/cars/59c47568-fde0-4dd7-9aef-03db6a962810").accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+    }
+
+    @Test
+    public void getCarMyModel() throws Exception {
+        Mockito.when(mockCarService.getByModel("Ford")).thenReturn(List.of(new Car()));
+        mvc.perform(MockMvcRequestBuilders
+                .get("/api/cars/model/Ford").accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
     }
 }
