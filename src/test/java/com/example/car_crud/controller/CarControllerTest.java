@@ -75,4 +75,20 @@ class CarControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(List.of(recordWithId), response.getBody());
     }
+
+    @Test
+    public void updateCar_shouldReturnCarAndOKHttpStatus() {
+        Mockito.when(mockCarService.update(input2, recordWithId.getId())).thenReturn(recordWithId2);
+        ResponseEntity<Car> response = carController.updateCar(input2, recordWithId.getId());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(recordWithId2, response.getBody());
+    }
+
+    @Test
+    public void updateCar_shouldReturn404WhenCarNotFound() {
+        Mockito.when(mockCarService.update(input, id)).thenThrow(new CarNotFoundException("A car with id: " + id + " was not found."));
+        ResponseEntity<Car> response = carController.updateCar(input, id);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
 }
