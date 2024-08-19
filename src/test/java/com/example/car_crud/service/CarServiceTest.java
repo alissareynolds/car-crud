@@ -181,4 +181,10 @@ class CarServiceTest {
         assertEquals(true, response.getHasAirConditioning());
         assertEquals(false, response.getIsTruck());
     }
+
+    @Test
+    public void delete_callsRepositoryDeleteMethod() {
+        carService.delete(id);
+        Mockito.verify(mockCarRepository).deleteById(id);
+    }
 }
