@@ -4,6 +4,7 @@ import com.example.car_crud.model.Car;
 import com.example.car_crud.service.CarService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestTemplate;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,5 +39,16 @@ class CarControllerTest {
         ResponseEntity<Car> response = carController.createCar(input);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(recordWithId, response.getBody());
+    }
+
+    @Test
+    public void getAllCars_shouldReturnListOfCarsAndOKHttpStatus() {
+        List<Car> cars = new ArrayList<>();
+        cars.add(input);
+        cars.add(input2);
+        Mockito.when(mockCarService.getAll()).thenReturn(cars);
+        ResponseEntity<List<Car>> response = carController.getAllCars();
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(cars, response.getBody());
     }
 }
