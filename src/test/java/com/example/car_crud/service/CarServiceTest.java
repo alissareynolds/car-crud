@@ -84,4 +84,101 @@ class CarServiceTest {
         CarNotFoundException exception = assertThrows(CarNotFoundException.class, () -> carService.update(input, id));
         assertEquals("A car with id: " + id + " was not found.", exception.getMessage());
     }
+
+    @Test
+    public void patch_throwsExceptionWhenCarNotFound() {
+        Mockito.when(mockCarRepository.findById(id)).thenReturn(Optional.empty());
+        CarNotFoundException exception = assertThrows(CarNotFoundException.class, () -> carService.patch(input, id));
+        assertEquals("A car with id: " + id + " was not found.", exception.getMessage());
+    }
+
+    @Test
+    public void patch_shouldReturnUpdatedModel() {
+        Car input = new Car();
+        input.setModel("Toyota");
+        Mockito.when(mockCarRepository.findById(recordWithId.getId())).thenReturn(Optional.of(recordWithId));
+        Mockito.when(mockCarRepository.save(Mockito.any())).thenAnswer(i -> i.getArguments()[0]);
+        Car response = carService.patch(input, recordWithId.getId());
+        assertEquals("Toyota", response.getModel());
+        assertEquals("Ranger", response.getMake());
+        assertEquals("white", response.getColor());
+        assertEquals(1997, response.getYear());
+        assertEquals(true, response.getHasAirConditioning());
+        assertEquals(true, response.getIsTruck());
+    }
+
+    @Test
+    public void patch_shouldReturnUpdatedMake() {
+        Car input = new Car();
+        input.setMake("Camry");
+        Mockito.when(mockCarRepository.findById(recordWithId.getId())).thenReturn(Optional.of(recordWithId));
+        Mockito.when(mockCarRepository.save(Mockito.any())).thenAnswer(i -> i.getArguments()[0]);
+        Car response = carService.patch(input, recordWithId.getId());
+        assertEquals("Ford", response.getModel());
+        assertEquals("Camry", response.getMake());
+        assertEquals("white", response.getColor());
+        assertEquals(1997, response.getYear());
+        assertEquals(true, response.getHasAirConditioning());
+        assertEquals(true, response.getIsTruck());
+    }
+
+    @Test
+    public void patch_shouldReturnUpdatedColor() {
+        Car input = new Car();
+        input.setColor("black");
+        Mockito.when(mockCarRepository.findById(recordWithId.getId())).thenReturn(Optional.of(recordWithId));
+        Mockito.when(mockCarRepository.save(Mockito.any())).thenAnswer(i -> i.getArguments()[0]);
+        Car response = carService.patch(input, recordWithId.getId());
+        assertEquals("Ford", response.getModel());
+        assertEquals("Ranger", response.getMake());
+        assertEquals("black", response.getColor());
+        assertEquals(1997, response.getYear());
+        assertEquals(true, response.getHasAirConditioning());
+        assertEquals(true, response.getIsTruck());
+    }
+
+    @Test
+    public void patch_shouldReturnUpdatedYear() {
+        Car input = new Car();
+        input.setYear(2000);
+        Mockito.when(mockCarRepository.findById(recordWithId.getId())).thenReturn(Optional.of(recordWithId));
+        Mockito.when(mockCarRepository.save(Mockito.any())).thenAnswer(i -> i.getArguments()[0]);
+        Car response = carService.patch(input, recordWithId.getId());
+        assertEquals("Ford", response.getModel());
+        assertEquals("Ranger", response.getMake());
+        assertEquals("white", response.getColor());
+        assertEquals(2000, response.getYear());
+        assertEquals(true, response.getHasAirConditioning());
+        assertEquals(true, response.getIsTruck());
+    }
+
+    @Test
+    public void patch_shouldReturnUpdatedHasAirConditioning() {
+        Car input = new Car();
+        input.setHasAirConditioning(false);
+        Mockito.when(mockCarRepository.findById(recordWithId.getId())).thenReturn(Optional.of(recordWithId));
+        Mockito.when(mockCarRepository.save(Mockito.any())).thenAnswer(i -> i.getArguments()[0]);
+        Car response = carService.patch(input, recordWithId.getId());
+        assertEquals("Ford", response.getModel());
+        assertEquals("Ranger", response.getMake());
+        assertEquals("white", response.getColor());
+        assertEquals(1997, response.getYear());
+        assertEquals(false, response.getHasAirConditioning());
+        assertEquals(true, response.getIsTruck());
+    }
+
+    @Test
+    public void patch_shouldReturnUpdatedIsTruck() {
+        Car input = new Car();
+        input.setIsTruck(false);
+        Mockito.when(mockCarRepository.findById(recordWithId.getId())).thenReturn(Optional.of(recordWithId));
+        Mockito.when(mockCarRepository.save(Mockito.any())).thenAnswer(i -> i.getArguments()[0]);
+        Car response = carService.patch(input, recordWithId.getId());
+        assertEquals("Ford", response.getModel());
+        assertEquals("Ranger", response.getMake());
+        assertEquals("white", response.getColor());
+        assertEquals(1997, response.getYear());
+        assertEquals(true, response.getHasAirConditioning());
+        assertEquals(false, response.getIsTruck());
+    }
 }
