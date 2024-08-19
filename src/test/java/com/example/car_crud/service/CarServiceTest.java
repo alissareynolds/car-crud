@@ -62,4 +62,26 @@ class CarServiceTest {
         CarNotFoundException exception = assertThrows(CarNotFoundException.class, () -> carService.getById(id));
         assertEquals("A car with id: " + id + " was not found.", exception.getMessage());
     }
+
+    @Test
+    public void getByModel_shouldReturnListOfCars() {
+        Mockito.when(mockCarRepository.findByModel(recordWithId.getModel())).thenReturn(List.of(recordWithId));
+        List<Car> response = carService.getByModel(recordWithId.getModel());
+        assertEquals(List.of(recordWithId), response);
+    }
+
+    @Test
+    public void update_shouldReturnUpdatedCar() {
+        Mockito.when(mockCarRepository.findById(recordWithId.getId())).thenReturn(Optional.of(recordWithId));
+        Mockito.when(mockCarRepository.save(Mockito.any())).thenReturn(recordWithId);
+        Car response = carService.update(input2, recordWithId.getId());
+        assertEquals(recordWithId, response);
+    }
+
+    @Test
+    public void update_throwsExceptionWhenCarNotFound() {
+        Mockito.when(mockCarRepository.findById(id)).thenReturn(Optional.empty());
+        CarNotFoundException exception = assertThrows(CarNotFoundException.class, () -> carService.update(input, id));
+        assertEquals("A car with id: " + id + " was not found.", exception.getMessage());
+    }
 }
