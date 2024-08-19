@@ -19,8 +19,7 @@ public class CarService {
     }
 
     public Car create(Car car) {
-        Car newCar = new Car(car.getModel(), car.getMake(), car.getColor(), car.getYear(), car.getHasAirConditioning(), car.getIsTruck());
-        return carRepository.save(newCar);
+        return carRepository.save(car);
     }
 
     public List<Car> getAll() {
@@ -35,12 +34,8 @@ public class CarService {
         return optionalCar.get();
     }
 
-    public Car getByModel(String model) {
-        Optional<Car> optionalCar = carRepository.findByModel(model);
-        if (optionalCar.isEmpty()) {
-            throw new CarNotFoundException("A car with model: " + model + " was not found.");
-        }
-        return optionalCar.get();
+    public List<Car> getByModel(String model) {
+        return carRepository.findByModel(model);
     }
 
     public Car update(Car car, UUID id) {
@@ -48,8 +43,8 @@ public class CarService {
         if (originalCar.isEmpty()) {
             throw new CarNotFoundException("A car with id: " + id + " was not found.");
         }
-        Car updatedCar = new Car(id, car.getModel(), car.getMake(), car.getColor(), car.getYear(), car.getHasAirConditioning(), car.getIsTruck());
-        return carRepository.save(updatedCar);
+        car.setId(id);
+        return carRepository.save(car);
      }
 
     public Car patch(Car car, UUID id) {
@@ -79,12 +74,7 @@ public class CarService {
         return carRepository.save(updatedCar);
     }
 
-    public Car delete(UUID id) {
-        Optional<Car> optionalCar = carRepository.findById(id);
-        if (optionalCar.isEmpty()) {
-            throw new CarNotFoundException("A car with id: " + id + " was not found.");
-        }
-        carRepository.delete(optionalCar.get());
-        return optionalCar.get();
+    public void delete(UUID id) {
+       carRepository.deleteById(id);
     }
 }

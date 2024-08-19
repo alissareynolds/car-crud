@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CarControllerTest {
 
-    private CarController mockCarController;
+    private CarController carController;
     private CarService mockCarService;
 
     private final Car input = new Car(null, "Ford", "Ranger", "white", 1997, true, true);
@@ -24,10 +24,19 @@ class CarControllerTest {
     private final Car recordWithId = new Car(UUID.randomUUID(), "Ford", "Ranger", "white", 1997, true, true);
     private final Car recordWithId2 = new Car(recordWithId.getId(), "Toyota", "Camry", "black", 2020, true, false);
 
+    public final UUID id = UUID.fromString("59c47568-fde0-4dd7-9aef-03db6a962810");
+
     @BeforeEach
     public void setup() {
         mockCarService = Mockito.mock(CarService.class);
-        mockCarController = new CarController(mockCarService);
+        carController = new CarController(mockCarService);
     }
 
+    @Test
+    public void createCar_shouldReturnCarAndCREATEDHttpStatus() {
+        Mockito.when(mockCarService.create(Mockito.any())).thenReturn(recordWithId);
+        ResponseEntity<Car> response = carController.createCar(input);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(recordWithId, response.getBody());
+    }
 }

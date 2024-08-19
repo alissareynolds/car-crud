@@ -44,14 +44,9 @@ public class CarController {
     }
 
     @GetMapping("/model/{model}")
-    public ResponseEntity<Car> getCarByModel(@PathVariable String model) {
-        Car car;
-        try {
-            car = carService.getByModel(model);
-        } catch (CarNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(car, HttpStatus.OK);
+    public ResponseEntity<List<Car>> getCarByModel(@PathVariable String model) {
+        List<Car> cars = carService.getByModel(model);
+        return new ResponseEntity<>(cars, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -78,12 +73,7 @@ public class CarController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Car> deleteCar(@PathVariable UUID id) {
-        Car car;
-        try {
-            car = carService.delete(id);
-        } catch (CarNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(car, HttpStatus.OK);
+        carService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
